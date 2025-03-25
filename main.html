@@ -2,14 +2,17 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Survey Form</title>
+  <title>Survey Form - Auto Next</title>
   <style>
     body {
       font-family: Arial, sans-serif;
       padding: 20px;
     }
-    .hidden {
+    .question {
       display: none;
+    }
+    .active {
+      display: block;
     }
     .result {
       margin-top: 20px;
@@ -27,41 +30,66 @@
 </head>
 <body>
 
-<h2>Simple Survey</h2>
+<h2>Simple Survey (Auto-Next)</h2>
 
 <form id="surveyForm">
-  <p>1. What is your favorite color?</p>
-  <label><input type="radio" name="q1" value="A" required> Red</label><br>
-  <label><input type="radio" name="q1" value="B"> Blue</label><br>
+  <div class="question active">
+    <p>1. What is your favorite color?</p>
+    <label><input type="radio" name="q1" value="A"> Red</label><br>
+    <label><input type="radio" name="q1" value="B"> Blue</label><br>
+  </div>
 
-  <p>2. What is your preferred pet?</p>
-  <label><input type="radio" name="q2" value="A" required> Dog</label><br>
-  <label><input type="radio" name="q2" value="B"> Cat</label><br>
+  <div class="question">
+    <p>2. What is your preferred pet?</p>
+    <label><input type="radio" name="q2" value="A"> Dog</label><br>
+    <label><input type="radio" name="q2" value="B"> Cat</label><br>
+  </div>
 
-  <p>3. Which season do you like most?</p>
-  <label><input type="radio" name="q3" value="A" required> Spring</label><br>
-  <label><input type="radio" name="q3" value="B"> Summer</label><br>
+  <div class="question">
+    <p>3. Which season do you like most?</p>
+    <label><input type="radio" name="q3" value="A"> Spring</label><br>
+    <label><input type="radio" name="q3" value="B"> Summer</label><br>
+  </div>
 
-  <p>4. What is your favorite genre of music?</p>
-  <label><input type="radio" name="q4" value="A" required> Pop</label><br>
-  <label><input type="radio" name="q4" value="B"> Rock</label><br>
+  <div class="question">
+    <p>4. What is your favorite genre of music?</p>
+    <label><input type="radio" name="q4" value="A"> Pop</label><br>
+    <label><input type="radio" name="q4" value="B"> Rock</label><br>
+  </div>
 
-  <br>
-  <button type="submit">Submit</button>
+  <button type="submit" id="submitBtn" style="display:none;">Submit</button>
 </form>
 
-<div id="result" class="result hidden">
+<div id="result" class="result" style="display:none;">
   <p>You are a:</p>
-  <img src="cat.jpg" alt="Thank You">
+  <img src="cat.jpg" alt="Result Image">
 </div>
 
 <script>
   const form = document.getElementById('surveyForm');
   const resultDiv = document.getElementById('result');
+  const questions = document.querySelectorAll('.question');
+  let currentQuestion = 0;
 
-  form.addEventListener('submit', function(event) {
-    event.preventDefault(); // Prevent form from refreshing the page
-    resultDiv.classList.remove('hidden'); // Show the thank you message and image
+  // Attach event listeners to all radio buttons
+  form.querySelectorAll('input[type="radio"]').forEach(radio => {
+    radio.addEventListener('click', () => {
+      // Move to the next question or submit if it's the last one
+      if (currentQuestion < questions.length - 1) {
+        questions[currentQuestion].classList.remove('active');
+        currentQuestion++;
+        questions[currentQuestion].classList.add('active');
+      } else {
+        // Last question answered, auto-submit
+        form.requestSubmit(); // triggers form submit
+      }
+    });
+  });
+
+  form.addEventListener('submit', function (event) {
+    event.preventDefault(); // Prevent page refresh
+    form.style.display = 'none';
+    resultDiv.style.display = 'block';
   });
 </script>
 
