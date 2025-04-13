@@ -345,12 +345,11 @@
 
       const selected = results[Math.floor(Math.random() * results.length)];
       shadowImage.src = selected.shadow;
+      resultImg.src = selected.img;
+      resultTitle.textContent = selected.title;
+      funFact.textContent = selected.fact;
 
       setTimeout(() => {
-        resultImg.src = selected.img;
-        resultTitle.textContent = selected.title;
-        funFact.textContent = selected.fact;
-
         loadingScreen.classList.add('d-none');
         finishSound.play();
         resultDiv.classList.remove('d-none');
