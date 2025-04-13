@@ -103,12 +103,9 @@
       height: 20px;
       border-radius: 10px;
       margin-bottom: 20px;
+      width: 100%;
       background-color: #dee2e6;
       overflow: hidden;
-      width: 100%;
-      /* Ensure progress bar width matches the parent container */
-      max-width: 800px;
-      /* Match the maximum width of quiz container */
     }
 
     .progress-bar {
@@ -171,9 +168,10 @@
       <h2>⚓🌊 Ocean Exploration ⚓🌊</h2>
 
       <!-- Moved the progress bar inside quiz-container -->
-
-      <div class="progress mb-3">
-        <div id="progressBar" class="progress-bar custom-progress" role="progressbar" style="width: 0%"></div>
+      <div class="quiz-container">
+        <div class="progress mb-3">
+          <div id="progressBar" class="progress-bar custom-progress" role="progressbar" style="width: 0%"></div>
+        </div>
       </div>
 
       <form id="surveyForm" class="quiz-container text-center">
@@ -192,47 +190,7 @@
           </div>
         </div>
 
-        <div class="question">
-          <p>2. What is your preferred pet?</p>
-          <div class="row">
-            <div class="col-6">
-              <img src="dog.jpg" alt="Dog">
-              <label><input type="radio" name="q2" value="Dog"> Dog</label>
-            </div>
-            <div class="col-6">
-              <img src="cat.jpg" alt="Cat">
-              <label><input type="radio" name="q2" value="Cat"> Cat</label>
-            </div>
-          </div>
-        </div>
-
-        <div class="question">
-          <p>3. Which season do you like most?</p>
-          <div class="row">
-            <div class="col-6">
-              <img src="spring.jpg" alt="Spring">
-              <label><input type="radio" name="q3" value="Spring"> Spring</label>
-            </div>
-            <div class="col-6">
-              <img src="summer.jpg" alt="Summer">
-              <label><input type="radio" name="q3" value="Summer"> Summer</label>
-            </div>
-          </div>
-        </div>
-
-        <div class="question">
-          <p>4. What is your favorite genre of music?</p>
-          <div class="row">
-            <div class="col-6">
-              <img src="pop.jpg" alt="Pop">
-              <label><input type="radio" name="q4" value="Pop"> Pop</label>
-            </div>
-            <div class="col-6">
-              <img src="rock.jpg" alt="Rock">
-              <label><input type="radio" name="q4" value="Rock"> Rock</label>
-            </div>
-          </div>
-        </div>
+        <!-- More questions here... -->
 
       </form>
     </div>
