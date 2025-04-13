@@ -162,6 +162,7 @@
     <!-- Start Screen -->
     <div id="startScreen" class="quiz-container text-center">
       <h2>🌌 Welcome to the Ocean Explorer Quiz 🌊</h2>
+      <img src="creatures.png" class="mb-3">
       <p>Embark on a fun personality journey across the deep seas!</p>
       <button id="startBtn" class="btn" style="background-color: #003973; color: white;">Start Quiz</button>
     </div>
@@ -182,11 +183,11 @@
           <p>1. What is your favorite color?</p>
           <div class="row">
             <div class="col-6">
-              <img src="red.jpg" alt="Red">
+              <img src="q1-option1 - coral reef.png" alt="Red">
               <label><input type="radio" name="q1" value="Red"> Red</label>
             </div>
             <div class="col-6">
-              <img src="blue.jpg" alt="Blue">
+              <img src="q1-option2 - shipwreck.png" alt="Blue">
               <label><input type="radio" name="q1" value="Blue"> Blue</label>
             </div>
           </div>
@@ -196,11 +197,11 @@
           <p>2. What is your preferred pet?</p>
           <div class="row">
             <div class="col-6">
-              <img src="dog.jpg" alt="Dog">
+              <img src="q2-option1 - jellyfish.png" alt="Dog">
               <label><input type="radio" name="q2" value="Dog"> Dog</label>
             </div>
             <div class="col-6">
-              <img src="cat.jpg" alt="Cat">
+              <img src="q2-option2 - fish.png" alt="Cat">
               <label><input type="radio" name="q2" value="Cat"> Cat</label>
             </div>
           </div>
@@ -210,11 +211,11 @@
           <p>3. Which season do you like most?</p>
           <div class="row">
             <div class="col-6">
-              <img src="spring.jpg" alt="Spring">
+              <img src="q3-option1 - seaweed.png" alt="Spring">
               <label><input type="radio" name="q3" value="Spring"> Spring</label>
             </div>
             <div class="col-6">
-              <img src="summer.jpg" alt="Summer">
+              <img src="q3-option2 - seamount.png" alt="Summer">
               <label><input type="radio" name="q3" value="Summer"> Summer</label>
             </div>
           </div>
@@ -224,11 +225,11 @@
           <p>4. What is your favorite genre of music?</p>
           <div class="row">
             <div class="col-6">
-              <img src="pop.jpg" alt="Pop">
+              <img src="q4-option1 - cave.png" alt="Pop">
               <label><input type="radio" name="q4" value="Pop"> Pop</label>
             </div>
             <div class="col-6">
-              <img src="rock.jpg" alt="Rock">
+              <img src="q4-option2 - ridge.png" alt="Rock">
               <label><input type="radio" name="q4" value="Rock"> Rock</label>
             </div>
           </div>
@@ -244,6 +245,7 @@
         <div class="spinner-border text-info" role="status">
           <span class="visually-hidden">Loading...</span>
         </div>
+        <img id="shadowImage" alt="Shadow Image" class="mb-3">
       </div>
     </div>
 
@@ -278,15 +280,36 @@
     const startScreen = document.getElementById('startScreen');
     const quizSection = document.getElementById('quizSection');
     const loadingScreen = document.getElementById('loadingScreen');
+    const shadowImage = document.getElementById('shadowImage');
 
     let currentQuestion = 0;
     const totalQuestions = questions.length;
 
     const results = [
-      { img: "angelfish.jpg", title: "Angelfish 🌈", fact: "Known for their grace and vibrant colors, angelfish love to shine in coral reefs." },
-      { img: "crab.jpg", title: "Crab 🦀", fact: "Crabs walk sideways and have a tough shell to protect their curious personalities." },
-      { img: "eel.jpg", title: "Eel ⚡", fact: "Electric eels can produce shocks up to 600 volts. That's shocking curiosity!" },
-      { img: "octo.jpg", title: "Octopus 🐙", fact: "Octopuses have 9 brains and can open jars—true problem solvers of the deep." }
+      {
+        shadow: "angelfish1.png",
+        img: "angelfish.png",
+        title: "Angelfish 🌈",
+        fact: "Known for their grace and vibrant colors, angelfish love to shine in coral reefs."
+      },
+      {
+        shadow: "crab1.png",
+        img: "crab.png",
+        title: "Crab 🦀",
+        fact: "Crabs walk sideways and have a tough shell to protect their curious personalities."
+      },
+      {
+        shadow: "eel1.png",
+        img: "eel.png",
+        title: "Eel ⚡",
+        fact: "Electric eels can produce shocks up to 600 volts. That's shocking curiosity!"
+      },
+      {
+        shadow: "octo1.png",
+        img: "octo.png",
+        title: "Octopus 🐙",
+        fact: "Octopuses have 9 brains and can open jars—true problem solvers of the deep."
+      }
     ];
 
     function updateProgress() {
@@ -320,8 +343,10 @@
       quizSection.classList.add('d-none');
       loadingScreen.classList.remove('d-none');
 
+      const selected = results[Math.floor(Math.random() * results.length)];
+      shadowImage.src = selected.shadow;
+
       setTimeout(() => {
-        const selected = results[Math.floor(Math.random() * results.length)];
         resultImg.src = selected.img;
         resultTitle.textContent = selected.title;
         funFact.textContent = selected.fact;
