@@ -20,7 +20,9 @@
       display: block;
     }
 
-    .quiz-container {
+    .quiz-container,
+    .result {
+      width: 100%;
       max-width: 600px;
       background: white;
       padding: 30px;
@@ -69,17 +71,14 @@
       font-size: 1.5rem;
     }
 
-    .result {
-      max-width: 600px;
-      background: white;
-      padding: 30px;
-      border-radius: 15px;
-      box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-    }
-
-    @media (max-width: 576px) {
-      .quiz-container {
+    @media (max-width: 1200px) {
+      .quiz-container,
+      .result {
+        width: 100%;
         padding: 20px;
+        margin: 0;
+        border-radius: 0;
+        box-shadow: none;
       }
 
       h2 {
@@ -198,6 +197,7 @@
   <!-- Confetti -->
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
+  <!-- Script Logic -->
   <script>
     const form = document.getElementById('surveyForm');
     const resultDiv = document.getElementById('result');
@@ -245,12 +245,16 @@
       form.style.display = 'none';
       quizSection.classList.add('d-none');
       loadingScreen.classList.remove('d-none');
+
       setTimeout(() => {
+        const selectedImage = images[Math.floor(Math.random() * images.length)];
+        resultImg.src = selectedImage;
+
         loadingScreen.classList.add('d-none');
         finishSound.play();
-        resultImg.src = images[Math.floor(Math.random() * images.length)];
         resultDiv.classList.remove('d-none');
         progressBar.style.width = '100%';
+
         confetti();
       }, 3000);
     }
