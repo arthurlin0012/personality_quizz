@@ -23,6 +23,8 @@
       background: linear-gradient(270deg, #003973, #E5E5BE, #003973);
       background-size: 600% 600%;
       animation: gradientBG 20s ease infinite;
+      color: #222;
+      /* global default text color */
     }
 
     @keyframes gradientBG {
@@ -58,6 +60,7 @@
       border-radius: 15px;
       box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
       text-align: center;
+      backdrop-filter: blur(10px);
     }
 
     .quiz-container img,
@@ -82,21 +85,7 @@
     h2 {
       text-align: center;
       margin-bottom: 30px;
-    }
-
-    label {
-      display: block;
-      width: 100%;
-      padding: 10px;
-      border-radius: 8px;
-      background-color: #e9ecef;
-      margin-top: 10px;
-      cursor: pointer;
-      text-align: center;
-    }
-
-    label:hover {
-      background-color: #dee2e6;
+      color: #003973;
     }
 
     .progress {
@@ -106,9 +95,7 @@
       background-color: #dee2e6;
       overflow: hidden;
       width: 100%;
-      /* Ensure progress bar width matches the parent container */
       max-width: 800px;
-      /* Match the maximum width of quiz container */
     }
 
     .progress-bar {
@@ -122,8 +109,10 @@
     .loading {
       font-size: 1.5rem;
       text-align: center;
+      color: #003973;
     }
 
+    /* === Result Section Styling Enhancements === */
     .result-title {
       font-size: 2rem;
       font-weight: bold;
@@ -132,9 +121,67 @@
     }
 
     .fun-fact {
-      font-size: 1.1rem;
+      font-size: 1.2rem;
       font-style: italic;
-      color: #555;
+      color: #333;
+      margin-bottom: 10px;
+    }
+
+    .result p {
+      font-size: 1.05rem;
+      color: #111;
+      line-height: 1.5;
+    }
+
+    /* === New uniform radio options and animation styles === */
+    .row>.col-6 {
+      display: flex;
+    }
+
+    label.option {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      width: 100%;
+      height: 100%;
+      padding: 10px;
+      border-radius: 8px;
+      background-color: #e9ecef;
+      text-align: center;
+      transition: transform 0.3s ease, background-color 0.3s ease;
+      cursor: pointer;
+    }
+
+    label.option:hover {
+      background-color: #d1e4f1;
+      transform: scale(1.02);
+    }
+
+    label.option img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 10px;
+      margin-bottom: 10px;
+      transition: transform 0.3s ease;
+    }
+
+    label.option div:last-child {
+      flex-grow: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+
+    label.option input {
+      display: none;
+    }
+
+    /* Optional: visual cue for selected option */
+    label.option input:checked+img,
+    label.option input:checked+img+div {
+      outline: 3px solid #003973;
+      outline-offset: -3px;
     }
 
     @media (max-width: 768px) {
@@ -153,6 +200,7 @@
       }
     }
   </style>
+
 </head>
 
 <body>
@@ -162,16 +210,14 @@
     <!-- Start Screen -->
     <div id="startScreen" class="quiz-container text-center">
       <h2>🌌 Welcome to the Ocean Explorer Quiz 🌊</h2>
-      <img src="creatures.png" class="mb-3">
-      <p>Embark on a fun personality journey across the deep seas!</p>
-      <button id="startBtn" class="btn" style="background-color: #003973; color: white;">Start Quiz</button>
+      <img src="creatures.png" class="mb-3" alt="Welcome Creatures">
+      <p>Adventure awaits beneath the ocean’s surface. Click the button below and let's dive in!</p>
+      <button id="startBtn" class="btn" style="background-color: #003973; color: white;">GO</button>
     </div>
 
     <!-- Quiz Section -->
     <div id="quizSection" class="d-none w-100 d-flex flex-column align-items-center">
       <h2>⚓🌊 Ocean Exploration ⚓🌊</h2>
-
-      <!-- Moved the progress bar inside quiz-container -->
 
       <div class="progress mb-3">
         <div id="progressBar" class="progress-bar custom-progress" role="progressbar" style="width: 0%"></div>
@@ -180,57 +226,86 @@
       <form id="surveyForm" class="quiz-container text-center">
 
         <div class="question active">
-          <p>1. What is your favorite color?</p>
+          <p>To begin your journey, would you like to explore the coral reef? Or head towards the shipwreck?</p>
           <div class="row">
             <div class="col-6">
-              <img src="q1-option1 - coral reef.png" alt="Red">
-              <label><input type="radio" name="q1" value="Red"> Red</label>
+              <label class="option">
+                <input type="radio" name="q1" value="coral">
+                <img src="q1-option1 - coral reef.png" alt="Coral Reef">
+                <div>Let’s swim through the coral reef. Who knows what bright, colourful surprises we’ll find along the
+                  way! </div>
+              </label>
             </div>
             <div class="col-6">
-              <img src="q1-option2 - shipwreck.png" alt="Blue">
-              <label><input type="radio" name="q1" value="Blue"> Blue</label>
+              <label class="option">
+                <input type="radio" name="q1" value="shipwreck">
+                <img src="q1-option2 - shipwreck.png" alt="Shipwreck">
+                <div>That shipwreck looks interesting. Let’s see what hidden mysteries we can uncover!</div>
+              </label>
             </div>
           </div>
         </div>
 
         <div class="question">
-          <p>2. What is your preferred pet?</p>
+          <p>A smack of jellyfish and a school of fish glide past, inviting you to join their underwater adventure. Who
+            would you like to swim alongside?</p>
           <div class="row">
             <div class="col-6">
-              <img src="q2-option1 - jellyfish.png" alt="Dog">
-              <label><input type="radio" name="q2" value="Dog"> Dog</label>
+              <label class="option">
+                <input type="radio" name="q2" value="jellyfish">
+                <img src="q2-option1 - jellyfish.png" alt="Jellyfish">
+                <div>Venture North with the smack of jellyfish.</div>
+              </label>
             </div>
             <div class="col-6">
-              <img src="q2-option2 - fish.png" alt="Cat">
-              <label><input type="radio" name="q2" value="Cat"> Cat</label>
+              <label class="option">
+                <input type="radio" name="q2" value="fish">
+                <img src="q2-option2 - fish.png" alt="School of Fish">
+                <div>Swim South with the school of fish as your guide.</div>
+              </label>
             </div>
           </div>
         </div>
 
         <div class="question">
-          <p>3. Which season do you like most?</p>
+          <p>Your new friends lead you to a crossroads. Will you brave the seaweed forest or circle around the towering
+            seamount?</p>
           <div class="row">
             <div class="col-6">
-              <img src="q3-option1 - seaweed.png" alt="Spring">
-              <label><input type="radio" name="q3" value="Spring"> Spring</label>
+              <label class="option">
+                <input type="radio" name="q3" value="seaweed">
+                <img src="q3-option1 - seaweed.png" alt="Seaweed Forest">
+                <div>The seaweed forest looks exciting, what’s some fun without getting a little lost?</div>
+              </label>
             </div>
             <div class="col-6">
-              <img src="q3-option2 - seamount.png" alt="Summer">
-              <label><input type="radio" name="q3" value="Summer"> Summer</label>
+              <label class="option">
+                <input type="radio" name="q3" value="seamount">
+                <img src="q3-option2 - seamount.png" alt="Seamount">
+                <div>Let’s go around the seamount and enjoy the breathtaking view!</div>
+              </label>
             </div>
           </div>
         </div>
 
         <div class="question">
-          <p>4. What is your favorite genre of music?</p>
+          <p>After a bit of swimming, the landscape grows darker and more rocky—perfect for uncovering creatures you’ve
+            never seen before. Where do you want to explore?</p>
           <div class="row">
             <div class="col-6">
-              <img src="q4-option1 - cave.png" alt="Pop">
-              <label><input type="radio" name="q4" value="Pop"> Pop</label>
+              <label class="option">
+                <input type="radio" name="q4" value="cave">
+                <img src="q4-option1 - cave.png" alt="Cave">
+                <div>That cave looks like it’s hiding all sorts of exciting secrets. Let’s dive in and see what we find!
+                </div>
+              </label>
             </div>
             <div class="col-6">
-              <img src="q4-option2 - ridge.png" alt="Rock">
-              <label><input type="radio" name="q4" value="Rock"> Rock</label>
+              <label class="option">
+                <input type="radio" name="q4" value="ridge">
+                <img src="q4-option2 - ridge.png" alt="Ocean Ridge">
+                <div>I feel the ocean ridge calling—there must be something waiting for me there!</div>
+              </label>
             </div>
           </div>
         </div>
@@ -241,7 +316,7 @@
     <!-- Loading Screen -->
     <div id="loadingScreen" class="quiz-container text-center d-none">
       <div class="loading">
-        <p>🧠 Calculating your result...</p>
+        <p>Ohh, what's this? Looks like you’ve just made a discovery!</p>
         <div class="spinner-border text-info" role="status">
           <span class="visually-hidden">Loading...</span>
         </div>
@@ -254,6 +329,7 @@
       <div class="result-title" id="resultTitle">You are a mysterious creature!</div>
       <img id="resultImg" src="blank.jpg" alt="Result Image" class="mb-3">
       <p class="fun-fact" id="funFact">Here comes a cool fact!</p>
+      <p>Show us your new find at table E8 for an exciting prize!</p>
     </div>
 
   </div>
@@ -289,26 +365,26 @@
       {
         shadow: "angelfish1.png",
         img: "angelfish.png",
-        title: "Angelfish 🌈",
-        fact: "Known for their grace and vibrant colors, angelfish love to shine in coral reefs."
+        title: "Congrats, you’ve just discovered a Peppermint Angelfish!",
+        fact: "The peppermint angelfish is named for its distinctive and vibrant colors. Its bold red, orange, and white stripes resemble the pattern of a peppermint candy, giving it a festive and eye-catching look."
       },
       {
         shadow: "crab1.png",
         img: "crab.png",
-        title: "Crab 🦀",
-        fact: "Crabs walk sideways and have a tough shell to protect their curious personalities."
+        title: "Congrats, you’ve just discovered a Raspberry Crab!",
+        fact: "Raspberry crabs are known for their bright colours and charmingly small size. They typically have a reddish or purple hue with hints of orange and sometimes yellow, making them look like little berries or fruits."
       },
       {
         shadow: "eel1.png",
         img: "eel.png",
-        title: "Eel ⚡",
-        fact: "Electric eels can produce shocks up to 600 volts. That's shocking curiosity!"
+        title: "Congrats, you’ve just discovered a Garden Eel!",
+        fact: "Garden eels are named after their tendency to appear in large, dense colonies that resemble a \"garden.\" These eels burrow into the sandy seafloor, with only their heads and upper bodies sticking out, gently swaying with the current."
       },
       {
         shadow: "octo1.png",
         img: "octo.png",
-        title: "Octopus 🐙",
-        fact: "Octopuses have 9 brains and can open jars—true problem solvers of the deep."
+        title: "Congrats, you’ve just discovered a Flapjack Octopus!",
+        fact: "This creature gets its name from its unique, flattened body that resembles a pancake or \"flapjack\". Its flat body helps it blend into the ocean floor and navigate more efficiently."
       }
     ];
 
@@ -354,14 +430,12 @@
         finishSound.play();
         resultDiv.classList.remove('d-none');
         progressBar.style.width = '100%';
-
         confetti();
       }, 3000);
     }
 
     updateProgress();
   </script>
-
 </body>
 
 </html>
