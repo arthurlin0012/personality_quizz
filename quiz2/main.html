@@ -183,22 +183,13 @@
     }
 
     .option {
-      min-width: 0;
       display: flex;
       flex-direction: column;
-      align-items: stretch;
-      padding: 0;
+      position: relative;
       overflow: hidden;
-      border: 2px solid #d5e9e8;
-      border-radius: 16px;
-      background: linear-gradient(160deg, #f5fffc, #e6f4f5);
-      color: var(--ocean);
-      font-weight: 700;
-      line-height: 1.5;
-      text-align: center;
-      cursor: pointer;
-      transition: transform .16s ease, border-color .16s ease, background .16s ease;
-      -webkit-tap-highlight-color: transparent;
+      height: auto;
+      min-width: 0;
+      padding: 0;
     }
 
     .option:hover {
@@ -207,13 +198,25 @@
       background: #e0f5ef;
     }
 
-    .option .option-image-wrap {
+    .option-image-wrap {
+      position: relative;
+      display: flex;
+      flex: 0 0 190px;
       width: 100%;
       height: 190px;
-      display: grid;
-      place-items: center;
-      padding: 10px;
-      background: rgba(210, 239, 237, .62);
+      overflow: hidden;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .option-image-wrap img {
+      display: block;
+      position: static;
+      width: 100%;
+      height: 100%;
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
     }
 
     .option img {
@@ -224,7 +227,16 @@
     }
 
     .option .option-text {
-      padding: 14px 14px 16px;
+      position: static;
+      display: block;
+      flex: 1 0 auto;
+      width: 100%;
+      min-height: 70px;
+      padding: 14px;
+      box-sizing: border-box;
+      overflow-wrap: anywhere;
+      white-space: normal;
+      background: #f5fffc;
     }
 
     .option input {
@@ -243,21 +255,28 @@
     }
 
     .loading-art {
-      width: min(100%, 320px);
-      height: 260px;
-      display: grid;
-      place-items: center;
+      width: 100%;
+      max-width: 380px;
+      min-height: 300px;
+      height: auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       margin: 0 auto 18px;
+      padding: 20px;
       border-radius: 18px;
       background: radial-gradient(circle, #e4f7f1, #d6eaf0);
       animation: breathe 1.8s ease-in-out infinite;
     }
 
     #shadowImg {
-      width: 88%;
-      height: 88%;
+      display: block;
+      width: 100%;
+      height: 280px;
+      max-width: 100%;
       object-fit: contain;
-      filter: opacity(.62) drop-shadow(0 8px 14px rgba(6, 59, 89, .2));
+      object-position: center;
+      filter: opacity(.75) drop-shadow(0 8px 14px rgba(6, 59, 89, .2));
     }
 
     .spinner {
@@ -349,12 +368,15 @@
         gap: 10px;
       }
 
-      .option .option-image-wrap {
-        height: 170px;
-      }
+      @media (max-width: 520px) {
+        .option .option-image-wrap {
+          height: 170px;
+        }
 
-      .option .option-text {
-        padding: 12px 13px 14px;
+        .option .option-text {
+          min-height: 0;
+          padding: 12px 13px 14px;
+        }
       }
 
       .result-image-wrap {
@@ -367,7 +389,11 @@
       }
 
       .loading-art {
-        height: 220px;
+        min-height: 260px;
+      }
+
+      #shadowImg {
+        height: 240px;
       }
     }
 
