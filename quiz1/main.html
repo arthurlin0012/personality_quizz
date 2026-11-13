@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#063b59">
+  <title>Ocean Explorer Quiz</title>
+  <style>
+    :root {
+      --ocean: #063b59;
+      --ocean-mid: #087e91;
+      --seafoam: #dff5f1;
+      --sand: #fff8e9;
+      --ink: #153746;
+      --muted: #55717b;
+      --card: rgba(255, 255, 255, .88);
+      --radius: 22px;
+      --shadow: 0 12px 38px rgba(4, 44, 62, .16);
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+    }
+
+    html {
+      min-height: 100%;
+    }
+
+    body {
+      min-height: 100vh;
+      margin: 0;
+      padding: 28px 16px 44px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      color: var(--ink);
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at 12% 8%, rgba(177, 232, 221, .8), transparent 28rem),
+        radial-gradient(circle at 90% 90%, rgba(255, 220, 166, .65), transparent 25rem),
+        linear-gradient(145deg, #e8f7f3, #d9edf5 52%, #fff5e5);
+      overflow-x: hidden;
+    }
+
+    button {
+      font: inherit;
+    }
+
+    .card,
+    #progressWrap {
+      position: relative;
+      z-index: 1;
+      width: min(100%, 560px);
+    }
+
+    .card {
+      padding: clamp(20px, 5vw, 34px);
+      text-align: center;
+      background: var(--card);
+      border: 1px solid rgba(255, 255, 255, .8);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .eyebrow {
+      margin: 0 0 8px;
+      color: var(--ocean-mid);
+      font-size: .76rem;
+      font-weight: 800;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+    }
+
+    h1,
+    h2 {
+      color: var(--ocean);
+      line-height: 1.2;
+      margin: 0 0 16px;
+    }
+
+    h1 {
+      font-size: clamp(1.8rem, 6vw, 2.5rem);
+    }
+
+    h2 {
+      font-size: clamp(1.25rem, 4.8vw, 1.65rem);
+    }
+
+    p {
+      line-height: 1.65;
+    }
+
+    .intro {
+      max-width: 42ch;
+      margin: 0 auto 22px;
+      color: var(--muted);
+    }
+
+    .welcome-art {
+      display: block;
+      width: 100%;
+      max-height: 250px;
+      object-fit: contain;
+      margin: 0 auto 20px;
+      border-radius: 16px;
+
+      /* Make white silhouettes visible against the light background */
+      filter:
+        brightness(0) saturate(100%) invert(17%) sepia(55%) saturate(1200%) hue-rotate(155deg) brightness(85%);
+    }
+
+    .primary-btn {
+      min-height: 50px;
+      padding: 13px 34px;
+      border: 0;
+      border-radius: 999px;
+      color: white;
+      background: linear-gradient(135deg, var(--ocean), var(--ocean-mid));
+      font-weight: 800;
+      letter-spacing: .06em;
+      cursor: pointer;
+      box-shadow: 0 6px 16px rgba(8, 126, 145, .24);
+      transition: transform .16s ease, filter .16s ease;
+    }
+
+    .primary-btn:hover {
+      filter: brightness(1.08);
+    }
+
+    .primary-btn:active {
+      transform: scale(.97);
+    }
+
+    button:focus-visible,
+    label:focus-within {
+      outline: 3px solid #e5a83d;
+      outline-offset: 3px;
+    }
+
+    #progressWrap {
+      margin: 0 0 14px;
+    }
+
+    .progress-track {
+      height: 8px;
+      overflow: hidden;
+      border-radius: 99px;
+      background: rgba(6, 59, 89, .12);
+    }
+
+    .progress-fill {
+      width: 0;
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, #087e91, #54bba8);
+      transition: width .35s ease;
+    }
+
+    .progress-label {
+      margin-top: 7px;
+      color: var(--muted);
+      font-size: .78rem;
+      text-align: right;
+    }
+
+    #questionText {
+      margin-bottom: 22px;
+    }
+
+    .options {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .option {
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      padding: 0;
+      overflow: hidden;
+      border: 2px solid #d5e9e8;
+      border-radius: 16px;
+      background: linear-gradient(160deg, #f5fffc, #e6f4f5);
+      color: var(--ocean);
+      font-weight: 700;
+      line-height: 1.5;
+      text-align: center;
+      cursor: pointer;
+      transition: transform .16s ease, border-color .16s ease, background .16s ease;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .option:hover {
+      transform: translateY(-2px);
+      border-color: #73bdb7;
+      background: #e0f5ef;
+    }
+
+    .option .option-image-wrap {
+      width: 100%;
+      height: 190px;
+      display: grid;
+      place-items: center;
+      padding: 10px;
+      background: rgba(210, 239, 237, .62);
+    }
+
+    .option img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    .option .option-text {
+      padding: 14px 14px 16px;
+    }
+
+    .option input {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    #loadingScreen p {
+      margin: 0 0 18px;
+      color: var(--ocean);
+      font-size: 1.1rem;
+      font-weight: 700;
+    }
+
+    .loading-art {
+      width: min(100%, 320px);
+      height: 260px;
+      display: grid;
+      place-items: center;
+      margin: 0 auto 18px;
+      border-radius: 18px;
+      background: radial-gradient(circle, #e4f7f1, #d6eaf0);
+      animation: breathe 1.8s ease-in-out infinite;
+    }
+
+    #shadowImg {
+      width: 88%;
+      height: 88%;
+      object-fit: contain;
+      filter: opacity(.62) drop-shadow(0 8px 14px rgba(6, 59, 89, .2));
+    }
+
+    .spinner {
+      width: 30px;
+      height: 30px;
+      margin: 0 auto;
+      border: 3px solid rgba(8, 126, 145, .18);
+      border-top-color: var(--ocean-mid);
+      border-radius: 50%;
+      animation: spin .8s linear infinite;
+    }
+
+    .result-image-wrap {
+      width: 100%;
+      min-height: 220px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      margin: 0 auto 18px;
+      border-radius: 18px;
+      background: radial-gradient(circle, #f4fffa, #dceef2);
+    }
+
+    #resultImg {
+      display: block;
+      width: auto;
+      height: auto;
+      max-width: 100%;
+      max-height: min(65vh, 520px);
+      object-fit: contain;
+    }
+
+    #resultTitle {
+      margin-bottom: 14px;
+    }
+
+    .fun-fact {
+      margin: 0 0 18px;
+      color: var(--muted);
+      font-style: italic;
+    }
+
+    .cta {
+      margin: 0;
+      padding: 14px;
+      border-radius: 12px;
+      background: #e8f5f1;
+      color: var(--ocean);
+      font-weight: 700;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    @keyframes breathe {
+
+      0%,
+      100% {
+        transform: scale(.98);
+        opacity: .8;
+      }
+
+      50% {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+
+    @media (max-width: 520px) {
+      body {
+        padding: 14px 12px 28px;
+      }
+
+      .card {
+        border-radius: 18px;
+        padding: 22px 16px;
+      }
+
+      .welcome-art {
+        max-height: 190px;
+      }
+
+      .options {
+        grid-template-columns: 1fr;
+        gap: 10px;
+      }
+
+      .option .option-image-wrap {
+        height: 170px;
+      }
+
+      .option .option-text {
+        padding: 12px 13px 14px;
+      }
+
+      .result-image-wrap {
+        min-height: 190px;
+        padding: 12px;
+      }
+
+      #resultImg {
+        max-height: 58vh;
+      }
+
+      .loading-art {
+        height: 220px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+
+      *,
+      *::before,
+      *::after {
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
+        transition-duration: .01ms !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main id="startScreen" class="card">
+    <p class="eyebrow">An underwater adventure</p>
+    <img src="shadows.png" alt="A collection of mysterious ocean creature silhouettes" class="welcome-art">
+    <h1>Welcome to the Ocean Explorer Quiz!</h1>
+    <p class="intro">Adventure awaits beneath the ocean’s surface. Follow your curiosity, make a few choices, and
+      discover which mysterious ocean creature is waiting to be found.</p>
+    <button id="startBtn" class="primary-btn" type="button">Start exploring</button>
+  </main>
+
+  <section id="progressWrap" class="hidden" aria-label="Quiz progress">
+    <div class="progress-track">
+      <div id="progressFill" class="progress-fill"></div>
+    </div>
+    <div id="progressLabel" class="progress-label">Question 1 of 4</div>
+  </section>
+
+  <section id="quizCard" class="card hidden" aria-live="polite">
+    <p class="eyebrow">Ocean exploration</p>
+    <h2 id="questionText"></h2>
+    <div class="options" id="optionsContainer"></div>
+  </section>
+
+  <section id="loadingScreen" class="card hidden" aria-live="polite">
+    <p>Ohh, what's this? Looks like you’ve just made a discovery!</p>
+    <div class="loading-art">
+      <img id="shadowImg" src="" alt="The silhouette of your newly discovered creature">
+    </div>
+    <div class="spinner" role="status" aria-label="Revealing your discovery"></div>
+  </section>
+
+  <section id="resultScreen" class="card hidden">
+    <p class="eyebrow">Discovery complete</p>
+    <h2 id="resultTitle"></h2>
+    <div class="result-image-wrap">
+      <img id="resultImg" src="" alt="Your discovered ocean creature">
+    </div>
+    <p class="fun-fact" id="funFact"></p>
+    <p class="cta">Show us your new find at table D5 for an exciting prize!</p>
+  </section>
+
+  <audio id="nextSound" src="bubble.mp3" preload="auto"></audio>
+  <audio id="finishSound" src="finish.mp3" preload="auto"></audio>
+
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  <script>
+    const questions = [
+      {
+        text: "To begin your journey, would you like to explore the coral reef or head towards the shipwreck?",
+        options: [
+          { value: "coral", img: "q1-option1 - coral reef.png", label: "Let’s swim through the coral reef. Who knows what bright, colourful surprises we’ll find!" },
+          { value: "shipwreck", img: "q1-option2 - shipwreck.png", label: "That shipwreck looks interesting. Let’s uncover its hidden mysteries!" }
+        ]
+      },
+      {
+        text: "A smack of jellyfish and a school of fish glide past, inviting you to join their underwater adventure. Who would you like to swim alongside?",
+        options: [
+          { value: "jellyfish", img: "q2-option1 - jellyfish.png", label: "Venture north with the smack of jellyfish." },
+          { value: "fish", img: "q2-option2 - fish.png", label: "Swim south with the school of fish as your guide." }
+        ]
+      },
+      {
+        text: "Your new friends lead you to a crossroads. Will you brave the seaweed forest or circle around the towering seamount?",
+        options: [
+          { value: "seaweed", img: "q3-option1 - seaweed.png", label: "The seaweed forest looks exciting. What’s some fun without getting a little lost?" },
+          { value: "seamount", img: "q3-option2 - seamount.png", label: "Let’s go around the seamount and enjoy the breathtaking view!" }
+        ]
+      },
+      {
+        text: "The landscape grows darker and more rocky — perfect for uncovering creatures you’ve never seen before. Where do you want to explore?",
+        options: [
+          { value: "cave", img: "q4-option1 - cave.png", label: "That cave must be hiding exciting secrets. Let’s dive in!" },
+          { value: "ridge", img: "q4-option2 - ridge.png", label: "I feel the ocean ridge calling. Something must be waiting there!" }
+        ]
+      }
+    ];
+
+    const results = [
+      {
+        shadow: "hermit crab shadow.png",
+        img: "hermit crab.png",
+        title: "You’ve discovered a Hermit Crab!",
+        fact: "Hermit crabs use empty shells for protection. As they grow, they need to find larger shells to call home."
+      },
+      {
+        shadow: "jellyfish shadow.png",
+        img: "jellyfish .png",
+        title: "You’ve discovered a Jellyfish!",
+        fact: "Jellyfish have no bones, heart or brain. They move through the water by gently pulsing their bell-shaped bodies."
+      },
+      {
+        shadow: "manta ray shadow.png",
+        img: "manta ray.png",
+        title: "You’ve discovered a Manta Ray!",
+        fact: "Manta rays are gentle filter feeders. They glide through the ocean with their enormous wing-like pectoral fins."
+      },
+      {
+        shadow: "seal shadow.png",
+        img: "seal.png",
+        title: "You’ve discovered a Seal!",
+        fact: "Seals are excellent swimmers. Their streamlined bodies and flippers help them move gracefully through the water."
+      }
+    ];
+
+    let currentIndex = 0;
+    let isTransitioning = false;
+
+    const startScreen = document.getElementById("startScreen");
+    const startBtn = document.getElementById("startBtn");
+    const progressWrap = document.getElementById("progressWrap");
+    const progressFill = document.getElementById("progressFill");
+    const progressLabel = document.getElementById("progressLabel");
+    const quizCard = document.getElementById("quizCard");
+    const questionText = document.getElementById("questionText");
+    const optionsContainer = document.getElementById("optionsContainer");
+    const loadingScreen = document.getElementById("loadingScreen");
+    const shadowImg = document.getElementById("shadowImg");
+    const resultScreen = document.getElementById("resultScreen");
+    const resultTitle = document.getElementById("resultTitle");
+    const resultImg = document.getElementById("resultImg");
+    const funFact = document.getElementById("funFact");
+    const nextSound = document.getElementById("nextSound");
+    const finishSound = document.getElementById("finishSound");
+
+    function show(element) { element.classList.remove("hidden"); }
+    function hide(element) { element.classList.add("hidden"); }
+
+    function playSound(audio) {
+      audio.currentTime = 0;
+      const playback = audio.play();
+      if (playback && typeof playback.catch === "function") playback.catch(() => { });
+    }
+
+    function updateProgress(index) {
+      const completed = index + 1;
+      progressFill.style.width = `${(completed / questions.length) * 100}%`;
+      progressLabel.textContent = `Question ${completed} of ${questions.length}`;
+    }
+
+    function renderQuestion(index) {
+      const question = questions[index];
+      questionText.textContent = question.text;
+      optionsContainer.replaceChildren();
+
+      question.options.forEach(option => {
+        const label = document.createElement("label");
+        label.className = "option";
+
+        const input = document.createElement("input");
+        input.type = "radio";
+        input.name = `question-${index}`;
+        input.value = option.value;
+        input.setAttribute("aria-label", option.label);
+
+        const imageWrap = document.createElement("div");
+        imageWrap.className = "option-image-wrap";
+
+        const image = document.createElement("img");
+        image.src = option.img;
+        image.alt = "";
+        image.loading = "lazy";
+        imageWrap.appendChild(image);
+
+        const text = document.createElement("span");
+        text.className = "option-text";
+        text.textContent = option.label;
+
+        label.append(input, imageWrap, text);
+        label.addEventListener("click", () => selectOption());
+        optionsContainer.appendChild(label);
+      });
+
+      updateProgress(index);
+    }
+
+    function selectOption() {
+      if (isTransitioning) return;
+      isTransitioning = true;
+      playSound(nextSound);
+
+      window.setTimeout(() => {
+        currentIndex += 1;
+        if (currentIndex < questions.length) {
+          renderQuestion(currentIndex);
+          isTransitioning = false;
+        } else {
+          showResultReveal();
+        }
+      }, 180);
+    }
+
+    function showResultReveal() {
+      hide(quizCard);
+      hide(progressWrap);
+
+      // The original quiz selected a creature at random after the final answer.
+      const chosen = results[Math.floor(Math.random() * results.length)];
+      shadowImg.src = chosen.shadow;
+      resultImg.src = chosen.img;
+      resultImg.alt = chosen.title;
+      resultTitle.textContent = chosen.title;
+      funFact.textContent = chosen.fact;
+
+      show(loadingScreen);
+      window.setTimeout(() => {
+        hide(loadingScreen);
+        show(resultScreen);
+        playSound(finishSound);
+        if (typeof window.confetti === "function") {
+          window.confetti({ particleCount: 110, spread: 70, origin: { y: 0.65 } });
+        }
+      }, 4000);
+    }
+
+    startBtn.addEventListener("click", () => {
+      hide(startScreen);
+      show(progressWrap);
+      show(quizCard);
+      currentIndex = 0;
+      isTransitioning = false;
+      renderQuestion(currentIndex);
+    });
+  </script>
+</body>
+
+</html>
